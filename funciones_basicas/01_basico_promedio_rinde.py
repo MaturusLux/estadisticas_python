@@ -1,4 +1,4 @@
-# 01 Promedio - Rinde x Lote
+# 01 Promedio - Rinde x Lote 
 import matplotlib.pyplot as plt
 import numpy as np
 #Promedio (Media aritmética)
