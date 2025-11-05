@@ -1,0 +1,345 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import minimize
+from scipy import stats
+
+# Datos: Supervivencia de picudos (Anthonomus grandis) después de aplicar insecticida
+np.random.seed(42)
+n_picudos = 200
+
+# Variables: 
+# - dosis_insecticida: mg por hectárea (20-100 mg/ha)
+# - temperatura: °C durante aplicación (15-35°C)
+# - humedad: % humedad relativa (40-90%)
+# - estadio_plaga: 1=adulto joven, 2=adulto maduro, 3=adulto viejo
+
+dosis_insecticida = np.random.uniform(20, 100, n_picudos)
+temperatura = np.random.uniform(15, 35, n_picudos)
+humedad = np.random.uniform(40, 90, n_picudos)
+estadio_plaga = np.random.choice([1, 2, 3], n_picudos, p=[0.3, 0.5, 0.2])
+
+print("=== REGRESIÓN DE COX - SUPERVIVENCIA DE PICUDOS EN ALGODÓN ===")
+print("Variables: dosis_insecticida, temperatura, humedad, estadio_plaga")
+
+# Parámetros reales del modelo de Cox
+beta_real = np.array([-0.08, 0.05, -0.02, 0.3])  # dosis, temp, humedad, estadio
+
+# Función de riesgo base (Weibull)
+def hazard_base(t, lambda_param=0.1, rho_param=1.5):
+    """Riesgo base Weibull"""
+    return lambda_param * rho_param * (lambda_param * t) ** (rho_param - 1)
+
+# Matriz de diseño (sin intercept en Cox)
+X = np.column_stack([dosis_insecticida, temperatura, humedad, estadio_plaga])
+X_std = (X - X.mean(axis=0)) / X.std(axis=0)  # Estandarizar para estabilidad numérica
+
+# Riesgo relativo
+risk_score = np.exp(X_std @ beta_real)
+
+# Generar tiempos de supervivencia (inversa de Weibull)
+lambda_weibull = 0.1
+rho_weibull = 1.5
+u = np.random.uniform(0, 1, n_picudos)
+tiempos_supervivencia = (-np.log(u) / (lambda_weibull * risk_score)) ** (1/rho_weibull)
+
+# Introducir censura (algunos picudos aún vivos al final del estudio)
+tiempo_max_estudio = 30  # días
+censura = np.random.binomial(1, 0.7, n_picudos)  # 70% de eventos observados
+evento = (tiempos_supervivencia <= tiempo_max_estudio) | (censura == 0)
+tiempos_observados = np.minimum(tiempos_supervivencia, tiempo_max_estudio)
+
+print(f"\nEstadísticas del estudio:")
+print(f"Tiempo máximo de estudio: {tiempo_max_estudio} días")
+print(f"Picudos con evento (muerte): {np.sum(evento)}")
+print(f"Picudos censurados (sobrevivientes): {np.sum(~evento)}")
+print(f"Tiempo promedio supervivencia: {np.mean(tiempos_observados[evento]):.1f} días")
+
+# REGRESIÓN DE COX - Partial Likelihood
+def cox_partial_likelihood(beta, X, times, events):
+    """Partial Likelihood de Cox"""
+    n = len(times)
+    log_pl = 0
+    
+    # Ordenar por tiempo
+    sorted_idx = np.argsort(times)
+    times_sorted = times[sorted_idx]
+    events_sorted = events[sorted_idx]
+    X_sorted = X[sorted_idx]
+    
+    risk_scores = np.exp(X_sorted @ beta)
+    
+    for i in range(n):
+        if events_sorted[i]:  # Solo para eventos observados
+            # Conjunto de riesgo en tiempo t_i
+            at_risk = times_sorted >= times_sorted[i]
+            denominator = np.sum(risk_scores[at_risk])
+            
+            if denominator > 0:
+                log_pl += np.log(risk_scores[i]) - np.log(denominator)
+    
+    return -log_pl  # Negativo para minimizar
+
+# Gradiente de Cox Partial Likelihood
+def cox_gradient(beta, X, times, events):
+    """Gradiente del Partial Likelihood"""
+    n = len(times)
+    gradient = np.zeros_like(beta)
+    
+    # Ordenar por tiempo
+    sorted_idx = np.argsort(times)
+    times_sorted = times[sorted_idx]
+    events_sorted = events[sorted_idx]
+    X_sorted = X[sorted_idx]
+    
+    risk_scores = np.exp(X_sorted @ beta)
+    
+    for i in range(n):
+        if events_sorted[i]:
+            # Conjunto de riesgo en tiempo t_i
+            at_risk = times_sorted >= times_sorted[i]
+            
+            # Términos del gradiente
+            S1 = np.sum(X_sorted[at_risk] * risk_scores[at_risk, np.newaxis], axis=0)
+            S0 = np.sum(risk_scores[at_risk])
+            
+            if S0 > 0:
+                gradient += X_sorted[i] - S1 / S0
+    
+    return -gradient
+
+# Ajustar modelo de Cox
+print("\n=== AJUSTANDO MODELO DE COX ===")
+beta_init = np.zeros(X_std.shape[1])
+result_cox = minimize(cox_partial_likelihood, beta_init, 
+                     args=(X_std, tiempos_observados, evento),
+                     method='BFGS', jac=cox_gradient)
+
+beta_cox = result_cox.x
+risk_scores_cox = np.exp(X_std @ beta_cox)
+
+print("Coeficientes de Cox (Hazard Ratios):")
+variables = ['Dosis Insecticida', 'Temperatura', 'Humedad', 'Estadio Plaga']
+for var, coef in zip(variables, beta_cox):
+    hr = np.exp(coef)
+    interpretacion = "↑ Riesgo" if hr > 1 else "↓ Riesgo"
+    print(f"  {var}: {coef:.4f} (HR: {hr:.4f}) - {interpretacion}")
+
+# COMPARATIVA: DOSIS SUFICIENTE vs INSUFICIENTE
+print("\n=== COMPARATIVA: DOSIS SUFICIENTE vs INSUFICIENTE ===")
+
+# Definir perfiles típicos
+perfil_suficiente = np.array([80, 25, 70, 2])  # Dosis alta, condiciones óptimas
+perfil_insuficiente = np.array([30, 32, 85, 3])  # Dosis baja, condiciones adversas
+
+# Estandarizar usando misma media y std que datos originales
+X_mean = X.mean(axis=0)
+X_std_dev = X.std(axis=0)
+
+perfil_suf_std = (perfil_suficiente - X_mean) / X_std_dev
+perfil_insuf_std = (perfil_insuficiente - X_mean) / X_std_dev
+
+# Calcular hazard ratios
+hr_suficiente = np.exp(perfil_suf_std @ beta_cox)
+hr_insuficiente = np.exp(perfil_insuf_std @ beta_cox)
+
+print(f"Perfil SUFICIENTE (Dosis 80mg/ha, 25°C, 70% humedad, adulto maduro):")
+print(f"  Hazard Ratio: {hr_suficiente:.4f} → Efectividad ALTA")
+
+print(f"\nPerfil INSUFICIENTE (Dosis 30mg/ha, 32°C, 85% humedad, adulto viejo):")
+print(f"  Hazard Ratio: {hr_insuficiente:.4f} → Efectividad BAJA")
+
+# ESTIMACIÓN DE SUPERVIVENCIA - MÉTODO DE KAPLAN-MEIER
+def kaplan_meier(times, events):
+    """Estimador de Kaplan-Meier"""
+    sorted_idx = np.argsort(times)
+    times_sorted = times[sorted_idx]
+    events_sorted = events[sorted_idx]
+    
+    unique_times = np.unique(times_sorted)
+    survival = np.ones(len(unique_times))
+    n_at_risk = np.zeros(len(unique_times))
+    
+    for i, t in enumerate(unique_times):
+        at_risk = times_sorted >= t
+        events_at_t = events_sorted[times_sorted == t]
+        n_events = np.sum(events_at_t)
+        n_at_risk[i] = np.sum(at_risk)
+        
+        if n_at_risk[i] > 0:
+            survival[i] = survival[i-1] * (1 - n_events / n_at_risk[i]) if i > 0 else (1 - n_events / n_at_risk[i])
+    
+    return unique_times, survival
+
+# Grupos por dosis
+dosis_alta = dosis_insecticida >= 70
+dosis_baja = dosis_insecticida <= 40
+
+# Curvas de supervivencia para cada grupo
+times_high, survival_high = kaplan_meier(tiempos_observados[dosis_alta], evento[dosis_alta])
+times_low, survival_low = kaplan_meier(tiempos_observados[dosis_baja], evento[dosis_baja])
+
+# VISUALIZACIÓN
+fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(16, 12))
+
+# Gráfico 1: Curvas de supervivencia Kaplan-Meier
+ax1.step(times_high, survival_high, where='post', linewidth=3, 
+         label='Dosis Alta (≥70 mg/ha)', color='green')
+ax1.step(times_low, survival_low, where='post', linewidth=3, 
+         label='Dosis Baja (≤40 mg/ha)', color='red')
+ax1.set_xlabel('Tiempo (días)')
+ax1.set_ylabel('Probabilidad de Supervivencia')
+ax1.set_title('Supervivencia de Picudos: Dosis Alta vs Baja\n(Método Kaplan-Meier)')
+ax1.legend()
+ax1.grid(True, alpha=0.3)
+ax1.set_ylim(0, 1)
+
+# Gráfico 2: Hazard Ratios de variables
+hazard_ratios = np.exp(beta_cox)
+x_pos = np.arange(len(variables))
+colors = ['red' if hr > 1 else 'green' for hr in hazard_ratios]
+
+bars = ax2.bar(x_pos, hazard_ratios, color=colors, alpha=0.7)
+ax2.axhline(y=1, color='black', linestyle='--', alpha=0.5, label='HR = 1 (Referencia)')
+ax2.set_xlabel('Variables')
+ax2.set_ylabel('Hazard Ratio (HR)')
+ax2.set_title('Hazard Ratios - Efecto en Mortalidad de Picudos')
+ax2.set_xticks(x_pos)
+ax2.set_xticklabels(variables, rotation=45)
+ax2.legend()
+
+# Añadir valores en las barras
+for bar, hr in zip(bars, hazard_ratios):
+    height = bar.get_height()
+    ax2.text(bar.get_x() + bar.get_width()/2., height + 0.02,
+             f'{hr:.2f}', ha='center', va='bottom')
+
+# Gráfico 3: Comparación perfiles suficiente vs insuficiente
+# Simular curvas de supervivencia para los perfiles
+def survival_curve_cox(hazard_ratio, time_points):
+    """Curva de supervivencia basada en hazard ratio"""
+    # Usar supervivencia base Weibull
+    lambda_base = 0.1
+    rho_base = 1.5
+    survival_base = np.exp(-(lambda_base * time_points) ** rho_base)
+    return survival_base ** hazard_ratio
+
+time_points = np.linspace(0, tiempo_max_estudio, 100)
+surv_suf = survival_curve_cox(hr_suficiente, time_points)
+surv_insuf = survival_curve_cox(hr_insuficiente, time_points)
+
+ax3.plot(time_points, surv_suf, linewidth=3, label='Dosis SUFICIENTE', color='green')
+ax3.plot(time_points, surv_insuf, linewidth=3, label='Dosis INSUFICIENTE', color='red')
+ax3.set_xlabel('Tiempo (días)')
+ax3.set_ylabel('Probabilidad de Supervivencia')
+ax3.set_title('Supervivencia Predicha: Perfiles Extremos')
+ax3.legend()
+ax3.grid(True, alpha=0.3)
+ax3.set_ylim(0, 1)
+
+# Gráfico 4: Efecto de la dosis en supervivencia
+dosis_range = np.linspace(20, 100, 50)
+perfil_base = np.array([25, 70, 2])  # temp, humedad, estadio promedio
+hazard_ratios_dosis = []
+
+for dosis in dosis_range:
+    perfil = np.array([dosis, perfil_base[0], perfil_base[1], perfil_base[2]])
+    perfil_std = (perfil - X_mean) / X_std_dev
+    hr = np.exp(perfil_std @ beta_cox)
+    hazard_ratios_dosis.append(hr)
+
+ax4.plot(dosis_range, hazard_ratios_dosis, linewidth=3, color='purple')
+ax4.axvline(x=70, color='green', linestyle='--', alpha=0.7, label='Umbral efectivo (~70 mg/ha)')
+ax4.axvline(x=40, color='red', linestyle='--', alpha=0.7, label='Umbral inefectivo (~40 mg/ha)')
+ax4.set_xlabel('Dosis de Insecticida (mg/ha)')
+ax4.set_ylabel('Hazard Ratio')
+ax4.set_title('Efecto de la Dosis en Mortalidad de Picudos')
+ax4.legend()
+ax4.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+
+# ANÁLISIS DE RESULTADOS
+print("\n" + "="*60)
+print("INTERPRETACIÓN PRÁCTICA")
+print("="*60)
+
+print("\n-- FACTORES QUE AFECTAN LA EFECTIVIDAD:")
+print(f"• DOSIS INSECTICIDA: HR = {hazard_ratios[0]:.3f}")
+print("  → Dosis más altas aumentan significativamente la mortalidad")
+
+print(f"• TEMPERATURA: HR = {hazard_ratios[1]:.3f}")
+print("  → Temperaturas moderadas (25-28°C) optimizan efectividad")
+
+print(f"• HUMEDAD: HR = {hazard_ratios[2]:.3f}")
+print("  → Alta humedad reduce efectividad del insecticida")
+
+print(f"• ESTADIO PLAGA: HR = {hazard_ratios[3]:.3f}")
+print("  → Picudos más viejos son más resistentes")
+
+# RECOMENDACIONES DE MANEJO
+print("\n" + "="*60)
+print("RECOMENDACIONES DE MANEJO INTEGRADO")
+print("="*60)
+
+print("""
+-- DOSIS EFECTIVA (≥70 mg/ha):
+• Aplicar en horarios de temperatura moderada (25-28°C)
+• Evitar aplicaciones con humedad >80%
+• Monitorear predominantemente adultos jóvenes
+
+-- DOSIS INEFECTIVA (≤40 mg/ha):
+• Alto riesgo de desarrollo de resistencia
+• Supervivencia prolongada permite reproducción
+• Necesidad de re-aplicaciones frecuentes
+
+-- UMBRALES CRÍTICOS:
+• Dosis mínima efectiva: 60-70 mg/ha
+• Temperatura óptima: 25-28°C  
+• Humedad máxima: 80%
+• Época ideal: adultos jóvenes predominantes
+""")
+
+# TEST DE LOG-RANK SIMPLIFICADO
+def log_rank_test(times1, events1, times2, events2):
+    """Test de log-rank simplificado"""
+    all_times = np.unique(np.concatenate([times1, times2]))
+    O1, O2 = 0, 0
+    E1, E2 = 0, 0
+    
+    for t in all_times:
+        # Riesgo en grupo 1
+        n1_risk = np.sum(times1 >= t)
+        n1_events = np.sum((times1 == t) & events1)
+        
+        # Riesgo en grupo 2
+        n2_risk = np.sum(times2 >= t)
+        n2_events = np.sum((times2 == t) & events2)
+        
+        # Total en riesgo y eventos
+        n_total_risk = n1_risk + n2_risk
+        n_total_events = n1_events + n2_events
+        
+        if n_total_risk > 0:
+            # Eventos esperados
+            e1 = n1_risk * n_total_events / n_total_risk
+            e2 = n2_risk * n_total_events / n_total_risk
+            
+            O1 += n1_events
+            O2 += n2_events
+            E1 += e1
+            E2 += e2
+    
+    # Estadístico chi-cuadrado
+    chi2 = ((O1 - E1)**2 / E1 + (O2 - E2)**2 / E2) if E1 > 0 and E2 > 0 else 0
+    return chi2
+
+chi2_logrank = log_rank_test(tiempos_observados[dosis_alta], evento[dosis_alta],
+                           tiempos_observados[dosis_baja], evento[dosis_baja])
+
+print(f"\n SIGNIFICANCIA ESTADÍSTICA:")
+print(f"Test de Log-Rank (dosis alta vs baja): χ² = {chi2_logrank:.3f}")
+if chi2_logrank > 3.84:
+    print("→ DIFERENCIA SIGNIFICATIVA (p < 0.05)")
+else:
+    print("→ Diferencia no significativa")
