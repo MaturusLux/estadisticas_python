@@ -1,22 +1,32 @@
-# 02 Promedio Movil - Valor Moneda Extranjera.
+# 02 - Promedio Movil - Cotizaciones
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# Promedio Movil, datos Sintéticos.
-np.random.seed(1)
-t = np.arange(100)
-data = 10 + 2 * np.sin(0.1 * t) + np.random.normal(0, 1, size=t.shape)
-# Ventana de movilidad.
-window = 10
-moving_avg = pd.Series(data).rolling(window=window).mean()
-# Gráfico Matplotlib.
-plt.figure(figsize=(10, 4))
-plt.plot(t, data, label='Datos Valor diario Mon. Extr.', alpha=0.6)
-plt.plot(t, moving_avg, color='red', linewidth=2, label=f'Promedio móvil (ventana={window})')
-plt.title('Promedio Móvil')
-plt.xlabel('Tiempo en días')
-plt.ylabel('Valor Mon. Extranjera.')
+# Cargar datos desde CSV con dtype estructurado
+dtype = [('date', 'datetime64[D]'), ('price', 'f8')]
+data = np.genfromtxt('sojaCotizacion2025.csv', delimiter=',', names=True, dtype=dtype)
+
+# Extraer fechas y precios
+dates = data['date']
+prices = data['price']
+
+# Crear una Serie de pandas con las fechas como índice (opcional pero recomendado)
+price_series = pd.Series(prices, index=dates)
+
+# Calcular promedio móvil
+window = 30
+moving_avg = price_series.rolling(window=window).mean()
+
+# Gráfico
+plt.figure(figsize=(12, 6))
+plt.plot(dates, prices, label='Precio Soja', alpha=0.5)
+plt.plot(dates, moving_avg, label=f'Promedio Móvil ({window} días)', color='red', linewidth=2)
+plt.title('Cotización de Soja con Promedio Móvil')
+plt.xlabel('Fecha')
+plt.ylabel('Precio (ARS)')
 plt.legend()
 plt.grid(True, linestyle=':', alpha=0.6)
+plt.xticks(rotation=45)
+plt.tight_layout()
 plt.show()
