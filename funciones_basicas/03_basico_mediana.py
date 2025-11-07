@@ -1,45 +1,75 @@
-# 03 - Mediana - Centro de Resultados
+# 03 - Mediana - Centro de Recorridos de Reparto
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Fijar semilla para reproducibilidad
-np.random.seed(42)
-
-# Simular lluvia en 20 lotes (en mm/año)
-# 17 lotes con lluvia típica: entre 600 y 1000 mm
-lluvia_normal = np.random.uniform(200, 600, size=17)
-
-# 3 lotes con mucha más lluvia (ej. zonas montañosas): entre 1800 y 2500 mm
-lluvia_alta = np.random.uniform(650, 1500, size=3)
-
-# Combinar y mezclar
-lluvia_total = np.concatenate([lluvia_normal, lluvia_alta])
-# Mezclar para que los lotes con alta lluvia no estén al final
-np.random.shuffle(lluvia_total)
-
-# Calcular mediana
-mediana_lluvia = np.median(lluvia_total)
-
-# Crear gráfico de líneas (uno por lote)
-lotes = np.arange(1, 21)  # Lotes 1 a 20
-
-plt.figure(figsize=(12, 6))
-plt.plot(lotes, lluvia_total, marker='o', linestyle='-', color='skyblue', linewidth=2, markersize=6, label='Lluvia por lote')
-plt.axhline(mediana_lluvia, color='red', linestyle='--', linewidth=2, label=f'Mediana = {mediana_lluvia:.1f} mm')
-
-# Resaltar los 3 lotes con más lluvia (opcional)
-indices_altos = np.argsort(lluvia_total)[-3:]  # Índices de los 3 mayores
-plt.scatter(lotes[indices_altos], lluvia_total[indices_altos], color='orange', s=100, zorder=5, label='Lluvia alta (3 lotes)')
-
-# Personalización
-plt.title('Milímetros de lluvia anual en 20 lotes\n(con 3 lotes de lluvia excepcional)', fontsize=14)
-plt.xlabel('Lote')
-plt.ylabel('Lluvia anual (mm)')
-plt.xticks(lotes)
-plt.legend()
-plt.grid(True, linestyle=':', alpha=0.7)
-plt.tight_layout()
-plt.show()
-
-# Mostrar valor de la mediana
-print(f"Mediana de lluvia anual en los 20 lotes: {mediana_lluvia:.1f} mm")
+# Mediana
+# Datos manuales, distintas distancias de recorrido de Camión de Reparto de productos.
+# Determinar el punto medio donde debería retornar en caso de no contar con cuenta corriente para carga gasoíl fuera de planta.
+try:
+    dtype = [('Destino', 'U20'), ('Kms', 'int')]
+    data = np.genfromtxt('destinosReparto.csv', delimiter=',', names=True, dtype=dtype, encoding='utf-8')
+    
+    # Extraer destinos y kilómetros
+    destinos = data['Destino']
+    kms = data['Kms']
+    
+    # Calcular mediana de los kilómetros
+    median_kms = np.median(kms)
+    
+    # Calcular estadísticas adicionales útiles
+    total_kms = np.sum(kms)
+    mean_kms = np.mean(kms)
+    max_kms = np.max(kms)
+    min_kms = np.min(kms)
+    
+    print(f"\n=== ANÁLISIS DE DISTANCIAS DE REPARTO ===")
+    print(f"Mediana de distancias: {median_kms:.1f} km")
+    print(f"Distancia promedio: {mean_kms:.1f} km")
+    print(f"Distancia máxima: {max_kms} km")
+    print(f"Distancia mínima: {min_kms} km")
+    print(f"Suma total de kilómetros: {total_kms} km")
+    print(f"Número de destinos: {len(destinos)}")
+    
+    # Mostrar destinos que están cerca de la mediana (para planificación de ruta)
+    print(f"\nDestinos cercanos a la mediana ({median_kms:.1f} km):")
+    for i, destino in enumerate(destinos):
+        if abs(kms[i] - median_kms) <= 10:  # ±10 km de la mediana
+            print(f"  - {destino}: {kms[i]} km")
+    
+    # Gráfico mejorado
+    plt.figure(figsize=(10, 6))
+    
+    # Histograma
+    plt.hist(kms, bins=15, alpha=0.7, color='lightgreen', edgecolor='black', label='Frecuencia de distancias')
+    
+    # Líneas de referencia
+    plt.axvline(median_kms, color='darkgreen', linestyle='--', linewidth=2, 
+                label=f'Mediana = {median_kms:.1f} km')
+    plt.axvline(mean_kms, color='blue', linestyle=':', linewidth=2, 
+                label=f'Promedio = {mean_kms:.1f} km')
+    
+    plt.title('Distribución de Distancias de Reparto', fontsize=14, fontweight='bold')
+    plt.xlabel('Distancia del recorrido (km)', fontsize=12)
+    plt.ylabel('Frecuencia de Destinos', fontsize=12)
+    plt.legend()
+    plt.grid(True, linestyle=':', alpha=0.6)
+    
+    # Añadir información en el gráfico
+    plt.text(0.02, 0.98, f'Total destinos: {len(destinos)}\nSuma km: {total_kms}', 
+             transform=plt.gca().transAxes, verticalalignment='top',
+             bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+    
+    plt.tight_layout()
+    plt.show()
+    
+except FileNotFoundError:
+    print("Error: No se encontró el archivo 'destinosReparto.csv'")
+    print("Por favor, asegúrate de que el archivo existe en el directorio actual.")
+    print("\nEstructura esperada del archivo CSV:")
+    print("Destino,Kms")
+    print("Cliente_A,45")
+    print("Cliente_B,78")
+    print("...")
+    
+except Exception as e:
+    print(f"Error al procesar los datos: {e}")
