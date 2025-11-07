@@ -64,7 +64,7 @@ https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/09_regre
 
 
 * [`10 Regresión Cox (Supervivencia de picudos)`](
-https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/10_regresion_cox)
+https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/10_regresion_cox.py)
 
 * [`11 Regresión Cuantílica (Gastos no previstos en Campaña)`](
 https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/11_regresion_cuantilica.py)
