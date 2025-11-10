@@ -51,8 +51,6 @@ flowchart LR
   G4 --> H6["MATRIZ"]
   G4 --> H7["T-SNE"]
   G4 --> H8["UMAP"]
-
-
     linkStyle 0 stroke:#2ecd71,stroke-width:2px
     linkStyle 1 stroke:#2ecd71,stroke-width:2px
     linkStyle 2 stroke:#2ecd71,stroke-width:2px
@@ -99,6 +97,7 @@ flowchart LR
     linkStyle 43 stroke:#2ecd71,stroke-width:2px
 
     click C1 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/01_basico_promedio_rinde.py" "Media Aritmética"
+    click C1 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/01_basico_promedio_rinde.py" "Media Aritmética"
     click C2 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/02_basico_promedio_movil.py" "Media Aritmética Múltiple"
     click C3 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/03_basico_mediana.py" "Mediana"
     click C4 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/04_moda.py" "Moda"
@@ -107,29 +106,29 @@ flowchart LR
     click C7a "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/07_desvio_estandar_lineal.py" "Desvío Estandar Lineal"
     click C7b "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/07_desvio_estandar_polinomial.py" "Desvío Estandar Polinomial"
     click C8 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/08_varianza_altaBaja_coefVariacion.py" "Varianza"
-    click D1 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/01_regresion_lineal_agro.py" "Regresión Lineal"
-    click D2 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/02_regresion_lineal_multiple.py" "Regresión Lineal Multiple"
-    click D3 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/03_regresion_logistica.py" "Regresión Logística"
-    click D4 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/04_regresion_polinomial.py" "Regresión Polinomial"
-    click D5 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/05_regresion_binomial_negativa.py" "Regresión Binomial Negativa"
-    click D6 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/06_regresionLasso.py" "Regresión Lasso"
-    click D7A "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/07_regresion_ridge_lineal.py" "Regresión Ridge Lineal"
-    click D7B "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/07_regresion_ridge_logistica.py" "Regresión Ridge Logística"
-    click D8 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/08_regresion_elasticNet.py" "Regresion ElasticNet"
-    click D9 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/09_regresion_poisson.py" "Regresion Poisson"
-    click D10 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/10_regresion_cox.py" "Regresión Cox"
-    click D11 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/11_regresion_cuantilica.py" "Regresión Cuantílica"
-    click D12 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/12_regresion_probit.py" "Regresion Probit"
-    click D13 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/13_regresion_theil_sen.py" "Regresion Theil Sen"
-    click D14 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/14_regresion_loess_lowess.py" "Regresion Loess Lowess"
-    click E1 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/01_LinearDiscriminantAnalysis.py" "Análisis Discrimanante Linear"
-    click E2 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/02_decision_tree_classifier.py" "Árbol de Decisión"
-    click E3 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/03_random_forest_classifier_bagging.py" "Random Forest Classifier"
-    click E4 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/04_gradient_boosting_machine_c.py" "Gradient Boosting - Classifier"
-    click E5 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/05_gradient_boosting_machine_r.py" "Gradient Boosting - Regressor"
-    click E6 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/06_k_nearest_neighbors.py" "K-Nearest Neighbors"
-    click E7 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/07_naive_bayes_multinomial.py" "Naives Bayes Gaussian"
-    click E8 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/08_quadratic_discriminant_anaysis.py" "Análisis Discriminante Cuadrático"
-    click H1 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/01_k_means.py" "KMeans"
-    click H2 "https:https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/02_dbscan.py" "DBCSAN"
+    click D1 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/01_regresion_lineal_agro.py" "Regresión Lineal"
+    click D2 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/02_regresion_lineal_multiple.py" "Regresión Lineal Multiple"
+    click D3 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/03_regresion_logistica.py" "Regresión Logística"
+    click D4 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/04_regresion_polinomial.py" "Regresión Polinomial"
+    click D5 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/05_regresion_binomial_negativa.py" "Regresión Binomial Negativa"
+    click D6 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/06_regresionLasso.py" "Regresión Lasso"
+    click D7A "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/07_regresion_ridge_lineal.py" "Regresión Ridge Lineal"
+    click D7B "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/07_regresion_ridge_logistica.py" "Regresión Ridge Logística"
+    click D8 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/08_regresion_elasticNet.py" "Regresion ElasticNet"
+    click D9 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/09_regresion_poisson.py" "Regresion Poisson"
+    click D10 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/10_regresion_cox.py" "Regresión Cox"
+    click D11 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/11_regresion_cuantilica.py" "Regresión Cuantílica"
+    click D12 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/12_regresion_probit.py" "Regresion Probit"
+    click D13 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/13_regresion_theil_sen.py" "Regresion Theil Sen"
+    click D14 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/14_regresion_loess_lowess.py" "Regresion Loess Lowess"
+    click E1 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/01_LinearDiscriminantAnalysis.py" "Análisis Discrimanante Linear"
+    click E2 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/02_decision_tree_classifier.py" "Árbol de Decisión"
+    click E3 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/03_random_forest_classifier_bagging.py" "Random Forest Classifier"
+    click E4 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/04_gradient_boosting_machine_c.py" "Gradient Boosting - Classifier"
+    click E5 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/05_gradient_boosting_machine_r.py" "Gradient Boosting - Regressor"
+    click E6 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/06_k_nearest_neighbors.py" "K-Nearest Neighbors"
+    click E7 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/07_naive_bayes_multinomial.py" "Naives Bayes Gaussian"
+    click E8 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/08_quadratic_discriminant_anaysis.py" "Análisis Discriminante Cuadrático"
+    click H1 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/01_k_means.py" "KMeans"
+    click H2 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/02_dbscan.py" "DBCSAN"
 ```
