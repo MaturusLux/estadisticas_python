@@ -5,7 +5,7 @@
 
 ```mermaid
 %%{init: {"flowchart": {"defaultRenderer": "elk"}} }%%
-flowchart LR
+graph LR
   DU["Estadística en Python"]
   DU --> G1["Funciones Básicas"]
   DU --> G2["Regresiones"]
@@ -97,7 +97,6 @@ flowchart LR
     linkStyle 43 stroke:#2ecd71,stroke-width:2px
 
     click C1 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/01_basico_promedio_rinde.py" "Media Aritmética"
-    click C1 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/01_basico_promedio_rinde.py" "Media Aritmética"
     click C2 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/02_basico_promedio_movil.py" "Media Aritmética Múltiple"
     click C3 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/03_basico_mediana.py" "Mediana"
     click C4 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/04_moda.py" "Moda"
@@ -121,14 +120,14 @@ flowchart LR
     click D12 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/12_regresion_probit.py" "Regresion Probit"
     click D13 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/13_regresion_theil_sen.py" "Regresion Theil Sen"
     click D14 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/14_regresion_loess_lowess.py" "Regresion Loess Lowess"
-    click E1 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/01_LinearDiscriminantAnalysis.py" "Análisis Discrimanante Linear"
-    click E2 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/02_decision_tree_classifier.py" "Árbol de Decisión"
-    click E3 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/03_random_forest_classifier_bagging.py" "Random Forest Classifier"
-    click E4 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/04_gradient_boosting_machine_c.py" "Gradient Boosting - Classifier"
-    click E5 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/05_gradient_boosting_machine_r.py" "Gradient Boosting - Regressor"
-    click E6 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/06_k_nearest_neighbors.py" "K-Nearest Neighbors"
-    click E7 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/07_naive_bayes_multinomial.py" "Naives Bayes Gaussian"
-    click E8 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/08_quadratic_discriminant_anaysis.py" "Análisis Discriminante Cuadrático"
-    click H1 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/01_k_means.py" "KMeans"
-    click H2 "https://github.com/MaturusLux/estadisticas_python/blob/main/regresiones/02_dbscan.py" "DBCSAN"
+    click E1 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/01_LinearDiscriminantAnalysis.py" "Análisis Discrimanante Linear"
+    click E2 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/02_decision_tree_classifier.py" "Árbol de Decisión"
+    click E3 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/03_random_forest_classifier_bagging.py" "Random Forest Classifier"
+    click E4 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/04_gradient_boosting_machine_c.py" "Gradient Boosting - Classifier"
+    click E5 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/05_gradient_boosting_machine_r.py" "Gradient Boosting - Regressor"
+    click E6 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/06_k_nearest_neighbors.py" "K-Nearest Neighbors"
+    click E7 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/07_naive_bayes_multinomial.py" "Naives Bayes Gaussian"
+    click E8 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/08_quadratic_discriminant_anaysis.py" "Análisis Discriminante Cuadrático"
+    click H1 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/01_k_means.py" "KMeans"
+    click H2 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/02_dbscan.py" "DBCSAN"
 ```
