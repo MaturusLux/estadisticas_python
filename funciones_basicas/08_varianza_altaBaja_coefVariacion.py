@@ -40,7 +40,7 @@ print(f"{'Mínimo':<20} {np.min(tractor_1):<12.2f} {np.min(tractor_2):<12.2f}")
 print(f"{'Máximo':<20} {np.max(tractor_1):<12.2f} {np.max(tractor_2):<12.2f}")
 
 # VISUALIZACIÓN
-fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 12))
+fig, (ax1, ax4) = plt.subplots(1, 2, figsize=(15, 12))
 
 # Gráfico 1: Diagrama de puntos con líneas de media y desviación
 meses = np.arange(1, len(tractor_1) + 1)
@@ -63,32 +63,7 @@ ax1.legend()
 ax1.grid(True, alpha=0.3)
 ax1.set_xticks(meses)
 
-# Gráfico 2: Histogramas comparativos
-bins = np.linspace(40, 160, 15)
-ax2.hist(tractor_1, bins=bins, alpha=0.7, color='blue', label='Tractor 1', density=True)
-ax2.hist(tractor_2, bins=bins, alpha=0.7, color='red', label='Tractor 2', density=True)
-
-ax2.axvline(media_t1, color='blue', linestyle='--', linewidth=2, label=f'Media T1: {media_t1:.1f}')
-ax2.axvline(media_t2, color='red', linestyle='--', linewidth=2, label=f'Media T2: {media_t2:.1f}')
-
-ax2.set_xlabel('Horas de Operación')
-ax2.set_ylabel('Densidad')
-ax2.set_title('Distribución de Horas de Operación')
-ax2.legend()
-ax2.grid(True, alpha=0.3)
-
-# Gráfico 3: Diagrama de caja (boxplot)
-datos_boxplot = [tractor_1, tractor_2]
-ax3.boxplot(datos_boxplot, labels=['Tractor 1\n(Baja varianza)', 'Tractor 2\n(Alta varianza)'])
-ax3.set_ylabel('Horas de Operación')
-ax3.set_title('Diagrama de Caja: Comparación de Dispersión')
-ax3.grid(True, alpha=0.3)
-
-# Añadir valores de media en el boxplot
-ax3.text(1, media_t1, f'Media: {media_t1:.1f}', ha='center', va='bottom', color='blue', fontweight='bold')
-ax3.text(2, media_t2, f'Media: {media_t2:.1f}', ha='center', va='bottom', color='red', fontweight='bold')
-
-# Gráfico 4: Comparación de medidas de dispersión
+# Gráfico 2: Comparación de medidas de dispersión
 medidas = ['Varianza', 'Desv. Estándar', 'Rango']
 valores_t1 = [var_t1, desv_t1, rango_t1]
 valores_t2 = [var_t2, desv_t2, rango_t2]
