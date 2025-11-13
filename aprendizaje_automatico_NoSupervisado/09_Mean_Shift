@@ -1,0 +1,347 @@
+# Mean Shift Agro con Datos Sintéticos
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import MeanShift, estimate_bandwidth
+from sklearn.preprocessing import StandardScaler
+import cv2
+from collections import Counter
+import random
+
+class SyntheticSatelliteImageGenerator:
+    def __init__(self, width=800, height=600):
+        self.width = width
+        self.height = height
+        self.colors = {
+            'agua': (65, 105, 225),        # Azul medio
+            'vegetacion_densa': (34, 139, 34),    # Verde foresta
+            'vegetacion_escasa': (107, 142, 35),  # Verde oliva
+            'construcciones': (169, 169, 169),    # Gris medio
+            'caminos': (210, 180, 140),    # Marrón claro
+            'tierra_arida': (160, 120, 80), # Marrón tierra
+            'cultivos': (50, 205, 50)      # Verde lima
+        }
+    
+    def generate_synthetic_image(self):
+        """Genera una imagen sintética que simula una vista aérea"""
+        # Crear fondo base (tierra árida)
+        image = np.full((self.height, self.width, 3), self.colors['tierra_arida'], dtype=np.uint8)
+        
+        # Agregar cuerpos de agua (lagos, ríos)
+        self._add_water_bodies(image)
+        
+        # Agregar zonas de vegetación
+        self._add_vegetation_areas(image)
+        
+        # Agregar construcciones
+        self._add_buildings(image)
+        
+        # Agregar caminos
+        self._add_roads(image)
+        
+        # Agregar cultivos
+        self._add_crops(image)
+        
+        # Agregar ruido y variaciones para hacerlo más realista
+        image = self._add_natural_variations(image)
+        
+        return image
+    
+    def _add_water_bodies(self, image):
+        """Agrega lagos y ríos"""
+        # Lago principal
+        cv2.ellipse(image, (200, 150), (120, 80), 0, 0, 360, self.colors['agua'], -1)
+        
+        # Río sinuoso
+        points = np.array([[50, 400], [150, 380], [250, 420], [350, 390], 
+                          [450, 410], [550, 380], [650, 400], [750, 390]], np.int32)
+        points = points.reshape((-1, 1, 2))
+        cv2.polylines(image, [points], False, self.colors['agua'], 25)
+        cv2.polylines(image, [points], False, self.colors['agua'], 15)
+    
+    def _add_vegetation_areas(self, image):
+        """Agrega áreas de vegetación densa y escasa"""
+        # Bosque denso
+        cv2.ellipse(image, (600, 200), (150, 100), 0, 0, 360, self.colors['vegetacion_densa'], -1)
+        
+        # Zonas de vegetación escasa
+        cv2.ellipse(image, (400, 500), (100, 80), 0, 0, 360, self.colors['vegetacion_escasa'], -1)
+        cv2.ellipse(image, (150, 500), (80, 60), 0, 0, 360, self.colors['vegetacion_escasa'], -1)
+    
+    def _add_buildings(self, image):
+        """Agrega construcciones rectangulares"""
+        # Grupo de edificios
+        buildings = [
+            ((500, 400), (50, 30)),   # (centro, (ancho, alto))
+            ((550, 380), (40, 40)),
+            ((580, 420), (35, 25)),
+            ((520, 450), (45, 35))
+        ]
+        
+        for center, size in buildings:
+            x, y = center
+            w, h = size
+            top_left = (x - w//2, y - h//2)
+            bottom_right = (x + w//2, y + h//2)
+            cv2.rectangle(image, top_left, bottom_right, self.colors['construcciones'], -1)
+    
+    def _add_roads(self, image):
+        """Agrega caminos y carreteras"""
+        # Carretera principal
+        cv2.line(image, (50, 300), (750, 300), self.colors['caminos'], 20)
+        
+        # Camino secundario
+        points = np.array([[300, 50], [350, 150], [320, 250], [400, 350]], np.int32)
+        points = points.reshape((-1, 1, 2))
+        cv2.polylines(image, [points], False, self.colors['caminos'], 12)
+    
+    def _add_crops(self, image):
+        """Agrega zonas de cultivo con patrones regulares"""
+        # Campo de cultivo rectangular
+        cv2.rectangle(image, (100, 50), (300, 200), self.colors['cultivos'], -1)
+        
+        # Patrón de cultivos en cuadrícula
+        for i in range(4):
+            for j in range(3):
+                x = 650 + i * 40
+                y = 450 + j * 40
+                cv2.rectangle(image, (x, y), (x + 30, y + 30), self.colors['cultivos'], -1)
+    
+    def _add_natural_variations(self, image):
+        """Agrega variaciones de color y ruido para mayor realismo"""
+        # Variación de color suave
+        variation = np.random.randint(-10, 10, (self.height, self.width, 3), dtype=np.int16)
+        image_varied = np.clip(image.astype(np.int16) + variation, 0, 255).astype(np.uint8)
+        
+        # Ruido gaussiano suave
+        noise = np.random.normal(0, 3, (self.height, self.width, 3))
+        image_noisy = np.clip(image_varied.astype(np.float64) + noise, 0, 255).astype(np.uint8)
+        
+        return image_noisy
+
+class SyntheticImageAnalyzer:
+    def __init__(self):
+        self.color_ranges_hsv = {
+            'agua': {
+                'lower': np.array([90, 50, 50]),
+                'upper': np.array([130, 255, 255])
+            },
+            'vegetacion_densa': {
+                'lower': np.array([30, 50, 30]),
+                'upper': np.array([80, 255, 150])
+            },
+            'vegetacion_escasa': {
+                'lower': np.array([25, 30, 30]),
+                'upper': np.array([70, 200, 180])
+            },
+            'construcciones': {
+                'lower': np.array([0, 0, 40]),
+                'upper': np.array([180, 50, 180])
+            },
+            'caminos': {
+                'lower': np.array([15, 20, 80]),
+                'upper': np.array([30, 100, 200])
+            },
+            'tierra_arida': {
+                'lower': np.array([10, 30, 60]),
+                'upper': np.array([25, 150, 180])
+            },
+            'cultivos': {
+                'lower': np.array([35, 40, 50]),
+                'upper': np.array([85, 255, 200])
+            }
+        }
+    
+    def apply_mean_shift_segmentation(self, image_array, quantile=0.1, n_samples=1000):
+        """Aplica Mean Shift para segmentación de colores"""
+        h, w, c = image_array.shape
+        image_reshaped = image_array.reshape(-1, 3)
+        
+        # Muestrear píxeles para estimar bandwidth
+        if len(image_reshaped) > n_samples:
+            indices = np.random.choice(len(image_reshaped), n_samples, replace=False)
+            samples = image_reshaped[indices]
+        else:
+            samples = image_reshaped
+        
+        # Estimar bandwidth para Mean Shift
+        bandwidth = estimate_bandwidth(samples, quantile=quantile, n_samples=n_samples)
+        print(f"Bandwidth estimado: {bandwidth:.2f}")
+        
+        # Aplicar Mean Shift
+        meanshift = MeanShift(bandwidth=bandwidth, bin_seeding=True, min_bin_freq=50)
+        meanshift.fit(samples)
+        
+        print(f"Número de clusters encontrados: {len(meanshift.cluster_centers_)}")
+        
+        # Predecir para todos los píxeles (en lotes para imágenes grandes)
+        batch_size = 10000
+        labels = []
+        
+        for i in range(0, len(image_reshaped), batch_size):
+            batch = image_reshaped[i:i + batch_size]
+            batch_labels = meanshift.predict(batch)
+            labels.extend(batch_labels)
+        
+        labels = np.array(labels)
+        segmented_image = meanshift.cluster_centers_[labels].reshape(h, w, c)
+        
+        return segmented_image.astype(np.uint8), labels.reshape(h, w), meanshift.cluster_centers_
+    
+    def calculate_areas_by_color_ranges(self, image_array):
+        """Calcula áreas basadas en rangos de colores predefinidos"""
+        h, w = image_array.shape[:2]
+        total_pixels = h * w
+        areas = {}
+        
+        # Convertir a espacio de color HSV para mejor detección de colores
+        hsv_image = cv2.cvtColor(image_array, cv2.COLOR_RGB2HSV)
+        
+        for zone_type, color_range in self.color_ranges_hsv.items():
+            # Crear máscara para el rango de color
+            mask = cv2.inRange(hsv_image, color_range['lower'], color_range['upper'])
+            
+            # Operaciones morfológicas para limpiar la máscara
+            kernel = np.ones((3, 3), np.uint8)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+            mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+            
+            # Calcular área
+            area_pixels = np.sum(mask > 0)
+            area_percentage = (area_pixels / total_pixels) * 100
+            area_hectares = (area_pixels * 0.0001)  # Conversión aproximada
+            
+            areas[zone_type] = {
+                'pixels': area_pixels,
+                'percentage': area_percentage,
+                'hectares': area_hectares
+            }
+        
+        return areas
+    
+    def analyze_synthetic_image(self, image_array):
+        """Análisis completo de la imagen sintética"""
+        print("Aplicando segmentación Mean Shift...")
+        segmented_image, labels, cluster_centers = self.apply_mean_shift_segmentation(image_array)
+        
+        print("Calculando áreas por tipos de zona...")
+        areas = self.calculate_areas_by_color_ranges(image_array)
+        
+        # Visualizar resultados
+        self.visualize_results(image_array, segmented_image, areas, labels)
+        
+        return areas, segmented_image
+    
+    def visualize_results(self, original, segmented, areas, labels):
+        """Visualiza los resultados del análisis"""
+        fig, axes = plt.subplots(2, 3, figsize=(24, 16))
+        
+        # Imagen original
+        axes[0, 0].imshow(original)
+        axes[0, 0].set_title('Imagen Sintética Original\n(Vista Aérea Simulada)', fontsize=14, fontweight='bold')
+        axes[0, 0].axis('off')
+        
+        # Imagen segmentada con Mean Shift
+        axes[0, 1].imshow(segmented)
+        axes[0, 1].set_title('Segmentación Mean Shift\n(Agrupación por Color)', fontsize=14, fontweight='bold')
+        axes[0, 1].axis('off')
+        
+        # Mapa de clusters
+        axes[0, 2].imshow(labels, cmap='tab20')
+        axes[0, 2].set_title('Mapa de Clusters\n(Regiones Homogéneas)', fontsize=14, fontweight='bold')
+        axes[0, 2].axis('off')
+        
+        # Gráfico de áreas
+        zone_types = list(areas.keys())
+        percentages = [areas[zone]['percentage'] for zone in zone_types]
+        colors_bars = ['blue', 'darkgreen', 'olive', 'gray', 'tan', 'brown', 'lime']
+        
+        bars = axes[1, 0].barh(zone_types, percentages, color=colors_bars)
+        axes[1, 0].set_xlabel('Porcentaje del Área Total (%)', fontsize=12)
+        axes[1, 0].set_title('Distribución de Áreas por Tipo de Zona', fontsize=14, fontweight='bold')
+        
+        # Agregar valores en las barras
+        for bar, percentage in zip(bars, percentages):
+            width = bar.get_width()
+            axes[1, 0].text(width + 0.5, bar.get_y() + bar.get_height()/2, 
+                           f'{percentage:.1f}%', ha='left', va='center', fontweight='bold')
+        
+        # Tabla de resultados detallados
+        axes[1, 1].axis('off')
+        table_data = []
+        for zone_type, data in areas.items():
+            table_data.append([
+                zone_type.replace('_', ' ').title(),
+                f"{data['pixels']:,}",
+                f"{data['percentage']:.2f}%",
+                f"{data['hectares']:.2f}"
+            ])
+        
+        table = axes[1, 1].table(
+            cellText=table_data,
+            colLabels=['Tipo de Zona', 'Píxeles', 'Porcentaje', 'Hectáreas'],
+            loc='center',
+            cellLoc='center',
+            bbox=[0.1, 0.1, 0.8, 0.8]
+        )
+        table.auto_set_font_size(False)
+        table.set_fontsize(10)
+        table.scale(1.2, 2)
+        
+        # Leyenda de colores
+        axes[1, 2].axis('off')
+        legend_elements = []
+        for zone_type, color in zip(zone_types, colors_bars):
+            legend_elements.append(plt.Rectangle((0, 0), 1, 1, fc=color, 
+                                               label=zone_type.replace('_', ' ').title()))
+        
+        axes[1, 2].legend(handles=legend_elements, loc='center', 
+                         title="Leyenda de Zonas", fontsize=10)
+        
+        plt.tight_layout()
+        plt.savefig('analisis_sintetico_completo.png', dpi=300, bbox_inches='tight')
+        plt.show()
+
+# Función principal
+def main():
+    # Generar imagen sintética
+    print("Generando imagen sintética...")
+    generator = SyntheticSatelliteImageGenerator(width=800, height=600)
+    synthetic_image = generator.generate_synthetic_image()
+    
+    # Convertir BGR a RGB para visualización
+    synthetic_image_rgb = cv2.cvtColor(synthetic_image, cv2.COLOR_BGR2RGB)
+    
+    # Analizar la imagen
+    analyzer = SyntheticImageAnalyzer()
+    areas, segmented_image = analyzer.analyze_synthetic_image(synthetic_image_rgb)
+    
+    # Mostrar resultados resumidos
+    print("\n" + "="*60)
+    print("RESULTADOS DEL ANÁLISIS - IMAGEN SINTÉTICA")
+    print("="*60)
+    
+    for zone_type, data in areas.items():
+        print(f"{zone_type.replace('_', ' ').title():<20}: {data['percentage']:6.2f}% "
+              f"({data['hectares']:6.2f} hectáreas)")
+    
+    # Cálculos especiales
+    area_verde_total = areas['vegetacion_densa']['hectares'] + \
+                      areas['vegetacion_escasa']['hectares'] + \
+                      areas['cultivos']['hectares']
+    
+    area_construida = areas['construcciones']['hectares'] + areas['caminos']['hectares']
+    
+    print("\n" + "-"*60)
+    print(f"ÁREA VERDE TOTAL:        {area_verde_total:6.2f} hectáreas")
+    print(f"ÁREA CONSTRUIDA TOTAL:   {area_construida:6.2f} hectáreas")
+    print(f"ÁREA DE AGUA:           {areas['agua']['hectares']:6.2f} hectáreas")
+    print(f"ÁREA NATURAL RESTANTE:  {areas['tierra_arida']['hectares']:6.2f} hectáreas")
+
+if __name__ == "__main__":
+
+######################
+# Output consola 
+# Image Sintetic
+######################
+    main()
