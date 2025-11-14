@@ -4,6 +4,7 @@
 # Índice del Repositorio
 
 ```mermaid
+
 %%{init: {"flowchart": {"defaultRenderer": "elk"}} }%%
 graph LR
   DU["Estadística en Python"]
@@ -46,11 +47,30 @@ graph LR
   G4 --> H1["KMeans"]
   G4 --> H2["DBSAN"]
   G4 --> H3["PCA"]
-  G4 --> H4["ICA"]
-  G4 --> H5["NMF"]
-  G4 --> H6["MATRIZ"]
-  G4 --> H7["T-SNE"]
-  G4 --> H8["UMAP"]
+  G4 --> H4["T-SNE"]
+  G4 --> H5["UMAP"]
+  G4 --> H6["ICA"]
+  G4 --> H7["Fuzzy C Means"]
+  G4 --> H8["NMF"]
+  G4 --> H9["Means Shift"]
+  DU --> I1["Optimización/Evaluación"]
+  I1 --> J1["Gradiente Descendente"]
+  J1 --> J2["Grad. Descendiente"]
+  J1 --> J3["Grad. Desc. por Lote"]
+  J1 --> J4["Grad. Desc. por MiniLote"]
+  J1 --> J5["Grad. Desc. Optimizado Adapt. Adam"]
+  J1 --> J6["Grad. Desc. Optimizado Adapt. AdamX"]
+  J1 --> J7["Grad. Desc. Optimizado Momentum"]
+  I1 --> J20["Funciones de Pérdida"]
+  J20 --> J21["ECM"]
+  J20 --> J22["MAE"]
+  J20 --> J23["Enrtopía Cruzada Binaria"]
+  I1 --> J40["Validación Cruzada"]
+  I1 --> J60["Función de Verosimilitud"]
+  DU --> K1["Series de Tiempo"]
+  K1 --> K2["ARIMA"]
+  K1 --> K3["SARIMA"]
+
     linkStyle 0 stroke:#2ecd71,stroke-width:2px
     linkStyle 1 stroke:#2ecd71,stroke-width:2px
     linkStyle 2 stroke:#2ecd71,stroke-width:2px
@@ -95,6 +115,24 @@ graph LR
     linkStyle 41 stroke:#2ecd71,stroke-width:2px
     linkStyle 42 stroke:#2ecd71,stroke-width:2px
     linkStyle 43 stroke:#2ecd71,stroke-width:2px
+    linkStyle 44 stroke:#2ecd71,stroke-width:2px
+    linkStyle 45 stroke:#2ecd71,stroke-width:2px
+    linkStyle 46 stroke:#2ecd71,stroke-width:2px
+    linkStyle 47 stroke:#2ecd71,stroke-width:2px
+    linkStyle 48 stroke:#2ecd71,stroke-width:2px
+    linkStyle 49 stroke:#2ecd71,stroke-width:2px
+    linkStyle 50 stroke:#2ecd71,stroke-width:2px
+    linkStyle 51 stroke:#2ecd71,stroke-width:2px
+    linkStyle 52 stroke:#2ecd71,stroke-width:2px
+    linkStyle 53 stroke:#2ecd71,stroke-width:2px
+    linkStyle 54 stroke:#2ecd71,stroke-width:2px
+    linkStyle 55 stroke:#2ecd71,stroke-width:2px
+    linkStyle 56 stroke:#2ecd71,stroke-width:2px
+    linkStyle 57 stroke:#2ecd71,stroke-width:2px
+    linkStyle 58 stroke:#2ecd71,stroke-width:2px
+    linkStyle 59 stroke:#2ecd71,stroke-width:2px
+    linkStyle 60 stroke:#2ecd71,stroke-width:2px
+    linkStyle 61 stroke:#2ecd71,stroke-width:2px
 
     click C1 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/01_basico_promedio_rinde.py" "Media Aritmética"
     click C2 "https://github.com/MaturusLux/estadisticas_python/blob/main/funciones_basicas/02_basico_promedio_movil.py" "Media Aritmética Múltiple"
@@ -130,4 +168,14 @@ graph LR
     click E8 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/08_quadratic_discriminant_anaysis.py" "Análisis Discriminante Cuadrático"
     click H1 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/01_k_means.py" "KMeans"
     click H2 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/02_dbscan.py" "DBCSAN"
+    click H3 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/03_PCA.py" "PCA"
+    click H4 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/04_TSNE.PY" "T-SNE"
+    click H5 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/05_UMA.py" "UMAP"
+    click H6 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/06_ICA.py" "ICA"
+    click H7 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/07_FUZZY_C_MEANS.py" "Fuzzy C Means"
+    click H8 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/08_NMF.py" "NMF"
+    click H9 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/09_Mean_Shift.py" "Means Shift"
+
+
 ```
+
