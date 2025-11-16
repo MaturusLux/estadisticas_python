@@ -12,6 +12,7 @@ graph LR
   DU --> G2["Regresiones"]
   DU --> G3["Aprendizaje Automatico Con Superv."]
   DU --> G4["Aprendizaje Automatico Sin Superv."]
+  
   G1 --> C1["Promedio"]
   G1 --> C2["Promedio Multiple"]
   G1 --> C3["Mediana"]
@@ -21,10 +22,14 @@ graph LR
   G1 --> C7a["Desvío Estandar Lineal"]
   G1 --> C7b["Desvío Estandar Polonomial"]
   G1 --> C8["Varianza"]
+  
   G2 --> D1["Regresion Lineal (Precio Hectáreas de Lote)"]
   G2 --> D2["Regresión Lineal Múltiple (Precio Hectáreas de Lote)"]
   G2 --> D3["Regresion Logística - Dosis Agroquímico Efectiva"]
   G2 --> D4["Regresion Polinomial - Volatilidad Precio Futuros"]
+  D4 --> D20["Por Grados"]
+  D4 --> D21["Por Clasificación Términos"]
+  D4 --> D22["Por Carácter de Términos"]
   G2 --> D5["Regresión Binomial Negativa"]
   G2 --> D6["Regresión Lasso"]
   G2 --> D7A["Regresión Ridge Lineal (Precio de flete)"]
@@ -36,14 +41,23 @@ graph LR
   G2 --> D12["Regresion Probit"]
   G2 --> D13["Regresion Theil Sen"]
   G2 --> D14["Regresion Loess Lowess"]
+  
   G3 --> E1["Análisis Discrimanante Linear"]
   G3 --> E2["Árbol de Decisión"]
   G3 --> E3["Random Forest Classifier"]
-  G3 --> E4["Gradient Boosting - Classifier"]
-  G3 --> E5["Gradient Boosting - Regressor"]
+  G3 --> E4["Gradient Boosting Machine"]
+  E4 --> E20["GBM-Classifier"]
+  E4 --> E21["GBM-Regressor"]
+  E4 --> E22["XGBoost"]
+  E4 --> E23["LightGBM"]
+  E4 --> E24["CatBoost"]
   G3 --> E6["K-Nearest Neighbors"]
-  G3 --> E7["Naives Bayes Gaussian"]
+  G3 --> E7["Naives Bayes"]
+  E7 --> E40["NB Gaussian"]
+  E7 --> E41["NB Multimonial"]
+  E7 --> E42["NB Bernouli"]
   G3 --> E8["Análisis Discriminante Cuadrático"]
+  
   G4 --> H1["KMeans"]
   G4 --> H2["DBSAN"]
   G4 --> H3["PCA"]
@@ -53,23 +67,37 @@ graph LR
   G4 --> H7["Fuzzy C Means"]
   G4 --> H8["NMF"]
   G4 --> H9["Means Shift"]
-  DU --> I1["Optimización/Evaluación"]
-  I1 --> J1["Gradiente Descendente"]
+   DU --> I1["Optimización/Evaluación"]
+   I1 --> J1["Gradiente Descendente"]
   J1 --> J2["Grad. Descendiente"]
   J1 --> J3["Grad. Desc. por Lote"]
   J1 --> J4["Grad. Desc. por MiniLote"]
   J1 --> J5["Grad. Desc. Optimizado Adapt. Adam"]
   J1 --> J6["Grad. Desc. Optimizado Adapt. AdamX"]
   J1 --> J7["Grad. Desc. Optimizado Momentum"]
-  I1 --> J20["Funciones de Pérdida"]
+   I1 --> J20["Funciones de Pérdida"]
   J20 --> J21["ECM"]
   J20 --> J22["MAE"]
   J20 --> J23["Enrtopía Cruzada Binaria"]
   I1 --> J40["Validación Cruzada"]
-  I1 --> J60["Función de Verosimilitud"]
+   J40 -->J41["K-Fold"]
+  J40 -->J42["Stratified K-Fold"]
+  J40 -->J43["Leave-One-Out (LOO)"]
+  J40 -->J44["Leave-P-Out"]
+  J40 -->J45["Shuffle-Split"]
+  J40 -->J46["Time Series Split"]
+    I1 --> J60["Función de Verosimilitud"]
   DU --> K1["Series de Tiempo"]
   K1 --> K2["ARIMA"]
   K1 --> K3["SARIMA"]
+  K1 --> K4["VAR"]
+  DU --> K20["Neuronal Network"]
+  K20 --> K21["Multi Layer Network"]
+  K20 --> K22["RNN-Recurrent Neuronal Network"]
+  K22 --> k23["LSTM"]
+  K22 --> k24["GRU"]
+  K20 --> K30["GNN-Graphic Neuronal Neetwork"]
+  K20 --> K31["CNN-Convolutional Neuronal Network"]
 
     linkStyle 0 stroke:#2ecd71,stroke-width:2px
     linkStyle 1 stroke:#2ecd71,stroke-width:2px
@@ -164,7 +192,7 @@ graph LR
     click E4 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/04_gradient_boosting_machine_c.py" "Gradient Boosting - Classifier"
     click E5 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/05_gradient_boosting_machine_r.py" "Gradient Boosting - Regressor"
     click E6 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/06_k_nearest_neighbors.py" "K-Nearest Neighbors"
-    click E7 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/07_naive_bayes_multinomial.py" "Naives Bayes Gaussian"
+    click E40 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/07_naive_bayes_multinomial.py" "Naives Bayes Gaussian"
     click E8 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico/08_quadratic_discriminant_anaysis.py" "Análisis Discriminante Cuadrático"
     click H1 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/01_k_means.py" "KMeans"
     click H2 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/02_dbscan.py" "DBCSAN"
@@ -175,7 +203,14 @@ graph LR
     click H7 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/07_FUZZY_C_MEANS.py" "Fuzzy C Means"
     click H8 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/08_NMF.py" "NMF"
     click H9 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/09_Mean_Shift.py" "Means Shift"
-
-
+    click H9 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/09_Mean_Shift.py" "Means Shift"
+        click J2 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/01_gradiente_descendente.py" "Gradiente Descendente"
+    click J3 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/02_gradiente_descendente_x_lotes.py" "Gradiente Descendente por Lote"
+    click J4 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/03_gradiente_descendiente_x_MiniLote.py" "Gradiente Descendente por Minilote"
+    click J5 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/04_grad_desc_optimizAdapt_Adm.py" "Gradiente Descendente Optimizado Adam"
+    click J6 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/05_grad_desc_optimizAdapt_AdmW.py" "Gradiente Descendente Optimizado AdamW"
+    click J7 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/06_grad_desc_optimiAdapt_momentum.py" "Gradiente Descendente Momentum"
+    click J21 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/funcionPerdida/01_MSE.py" "Error Cuadrático Medio"
+    click J22 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/funcionPerdida/02_MAE.py" "Error Absoluto Medio"
 ```
 
