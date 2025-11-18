@@ -22,6 +22,11 @@ graph LR
   G1 --> C7a["Desvío Estandar Lineal"]
   G1 --> C7b["Desvío Estandar Polonomial"]
   G1 --> C8["Varianza"]
+  G1 --> C9["Coef. de Correlación Pearson"]
+  G1 --> C10["Coef. de Correl. Rangos de Spearman"]
+  G1 --> C11["Coef. de Correl. Tau de Kendall"]
+  G1 --> C12["Coef. de Correl. Rangos PointBiserial"]
+  G1 --> C13["Coef. de Correl. KramerV"]
   
   G2 --> D1["Regresion Lineal (Precio Hectáreas de Lote)"]
   G2 --> D2["Regresión Lineal Múltiple (Precio Hectáreas de Lote)"]
@@ -92,12 +97,32 @@ graph LR
   K1 --> K3["SARIMA"]
   K1 --> K4["VAR"]
   DU --> K20["Neuronal Network"]
-  K20 --> K21["Multi Layer Network"]
-  K20 --> K22["RNN-Recurrent Neuronal Network"]
-  K22 --> k23["LSTM"]
-  K22 --> k24["GRU"]
-  K20 --> K30["GNN-Graphic Neuronal Neetwork"]
-  K20 --> K31["CNN-Convolutional Neuronal Network"]
+  K20 --> K21["FFNN"]
+    K21 --> K22["Perceptrón Simple"]
+    K21 --> K23["Multi Layer Network"]
+    K21 --> K24["Autoencoders"]
+  K20 --> K30["RNN-Recurrent Neuronal Network"]
+    K30 --> k31["Simple RNN"]
+    K30 --> k32["LSTM"]
+    K30 --> k33["GRU"]
+    K30 --> k34["Bidirectional RNN"]
+    K30 --> k35["Hierarchical RNN"]
+  K20 --> K40["GNN-Graphic Neuronal Neetwork"]
+  K20 --> K50["CNN-Convolutional Neuronal Network"]
+  K20 --> K60["Transformer Architectures"]
+    K60 --> K61["Encoder-Only"]
+    K60 --> K62["Decoder-Only"]
+    K60 --> K63["Encoder-Decoder"]
+  K20 --> K70["Generative Models"]
+  K20 --> K80["Neuro-Symbolic AI"]
+  K20 --> K90["Attention Mechasnisms"]
+  K20 --> K100["Neural Architecture Search (NAS)"]
+  K20 --> K110["Physics-Informed Neural Networks (PINN)"]
+  K20 --> K120["Spiking Neural Networks (SNN)"]
+  K20 --> K130["Multimodal Networks"]
+  K20 --> K140["META-Learning Networks"]
+  K20 --> K150["Explainable AI (XAI)"]
+  K20 --> K160["Quantum Neural Networks (QNN)"]
 
     linkStyle 0 stroke:#2ecd71,stroke-width:2px
     linkStyle 1 stroke:#2ecd71,stroke-width:2px
@@ -203,6 +228,7 @@ graph LR
     click H7 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/07_FUZZY_C_MEANS.py" "Fuzzy C Means"
     click H8 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/08_NMF.py" "NMF"
     click H9 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/09_Mean_Shift.py" "Means Shift"
+
     click H9 "https://github.com/MaturusLux/estadisticas_python/blob/main/aprendizaje_automatico_NoSupervisado/09_Mean_Shift.py" "Means Shift"
         click J2 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/01_gradiente_descendente.py" "Gradiente Descendente"
     click J3 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/02_gradiente_descendente_x_lotes.py" "Gradiente Descendente por Lote"
@@ -210,7 +236,7 @@ graph LR
     click J5 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/04_grad_desc_optimizAdapt_Adm.py" "Gradiente Descendente Optimizado Adam"
     click J6 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/05_grad_desc_optimizAdapt_AdmW.py" "Gradiente Descendente Optimizado AdamW"
     click J7 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/gradienteDescendente/06_grad_desc_optimiAdapt_momentum.py" "Gradiente Descendente Momentum"
+
     click J21 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/funcionPerdida/01_MSE.py" "Error Cuadrático Medio"
     click J22 "https://github.com/MaturusLux/estadisticas_python/blob/main/optimizacionEvaluacion/funcionPerdida/02_MAE.py" "Error Absoluto Medio"
 ```
-
